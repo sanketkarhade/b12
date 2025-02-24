@@ -3,22 +3,23 @@ name: Deploy to S3
 on:
   push:
     branches:
-      - main  # Change to your desired branch
+      - main  # Change this to the branch you want to deploy from
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AKIAS2VS4H5LBIZPQAFB }}
-        aws-secret-access-key: ${{ secrets.jy4nmF4UxAbjUWGVW2+MlMQeSYaLm1VaY06M36K5 }}
-        aws-region: us-east-1  # Change to your AWS region
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Deploy to S3
-      run: aws s3 sync . s3://sayudag --delete
+      - name: Deploy to S3
+        run: |
+          aws s3 sync . s3://${{ secrets.S3_BUCKET_NAME }} --delete
